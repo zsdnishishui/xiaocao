@@ -17,7 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class GetHtml {
-
+private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:2.0.1) Gecko/20100101 Firefox/4.0.1","Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0","Mozilla/5.0 (Windows; U; Windows NT 6.1; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50","Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50"};
 	 /**
 	  * 
 	  * @param url 访问路径
@@ -49,6 +49,16 @@ public class GetHtml {
  
 		// 创建Get请求
 		HttpGet httpGet = new HttpGet(url);
+		int reand = (int)(Math.random()*headers.length);
+		System.out.println(headers[reand]);
+		/*httpGet.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0");
+		httpGet.addHeader("Content-Type", "text/html");*/
+		 //设置请求头
+		httpGet.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+		httpGet.addHeader("Accept-Encoding", "gzip, deflate");
+		httpGet.addHeader("Accept-Language", "zh-CN,zh;q=0.8");
+		httpGet.addHeader("User-Agent", headers[reand]);
+		httpGet.addHeader("Cookie", "__cfduid=dda624dc3c43dd32d6594d24ce5ab70a11571729683; UM_distinctid=16df263d000ca-0501a5959945418-14377840-100200-16df263d0011df; CNZZDATA950900=cnzz_eid=173984157-1571725905-&ntime=1571732822; 227c9_lastvisit=0	1571734560	/read.php?tid=3540063&fpage=0&toread=&page=5; hibext_instdsigdipv2=1");
 		//HttpHost proxy = new HttpHost("123.163.97.219", 9);
 		// 响应模型
 		CloseableHttpResponse response = null;
@@ -99,73 +109,5 @@ public class GetHtml {
 			}
 		}
         return html;
-    }
-public static void showMaxPinglun() throws InterruptedException{
-	for (int i = 1; i <=100; i++) {
-    	Thread.sleep(1000);
-    	System.out.println(i);
-    	String html = getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page="+i);
-       //System.out.println(html);
-    	//这一句增强了系统健壮性
-        if ("".equals(html)) {
-			i--;
-		}
-        Document doc = Jsoup.parse(html);
-        // 获取目标HTML代码
-        Elements elements1 = doc.select("span[style=font-size:7pt;font-family:verdana;]");
-        //今天
-        //Elements elements2 = elements1.select("td a");
-        for(Element ele:elements1){
-        	/*if("东尼".equals(ele.text())){
-        		System.out.println("页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}*/
-        	/*if("大麦麦".equals(ele.text())&&ele.parent().parent().text().contains("美元")){
-        		System.out.println("页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}*/
-        	/*if(ele.text().contains("")){
-        		System.out.println("页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}*/
-        	String pages = ele.text();
-        	String[] page = pages.split(" ");
-        	int last = Integer.valueOf(page[page.length-1]);
-        	
-        	if (last>=100) {
-        		System.out.println(ele.parent().parent().text()+":页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-			}
-        }
-	}
-}
-public static void showtitleorzuozhe() throws InterruptedException{
-	for (int i = 1; i <=100; i++) {
-    	Thread.sleep(1000);
-    	System.out.println(i);
-    	String html = getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page="+i);
-       //System.out.println(html);
-    	//这一句增强了系统健壮性
-        if ("".equals(html)) {
-			i--;
-		}
-        Document doc = Jsoup.parse(html);
-        // 获取目标HTML代码
-        Elements elements1 = doc.select("tbody");
-        //今天
-        Elements elements2 = elements1.select("td a");
-        for(Element ele:elements2){
-        	/*if("东尼".equals(ele.text())){
-        		System.out.println("页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}*/
-        	/*if("大麦麦".equals(ele.text())&&ele.parent().parent().text().contains("美元")){
-        		System.out.println("页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}*/
-        	if(ele.text().contains("下载番号")){
-        		System.out.println(ele.text()+"：页面链接："+ele.parent().parent().select("h3 a").attr("href"));
-        	}
-        }
-	}
-}
-    public static void main(String[] args) throws InterruptedException {
-        
-    	//showtitleorzuozhe();
-    	showMaxPinglun();
     }
 }
