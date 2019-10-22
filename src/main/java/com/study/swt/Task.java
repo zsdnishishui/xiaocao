@@ -16,7 +16,7 @@ public class Task extends Thread{
 		private String title = null; 
 		private boolean stop; 
 		private String fun;
-		
+		private String pageNo;
 		public String getFun() {
 			return fun;
 		}
@@ -56,13 +56,13 @@ public class Task extends Thread{
 	    		if(stop){
 	    			break;
 	    		}
-	    		
-				try {
+	    		pageNo=i+"";
+				/*try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				}*/
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i);
 				if ("".equals(html)) {
 					i--;
@@ -78,6 +78,13 @@ public class Task extends Thread{
 					break;
 				}else{
 					System.out.println(i);
+					Display.getDefault().asyncExec(new Runnable(){  
+		                
+		                public void run() {  
+		                	text.append("第"+pageNo+"页\n");
+		                }
+		  
+		            });
 					Document doc = Jsoup.parse(html);
 					// 获取目标HTML代码
 					Elements elements1 = doc.select("tbody td");
@@ -99,19 +106,26 @@ public class Task extends Thread{
 				}
 				
 			}
+			Display.getDefault().asyncExec(new Runnable(){  
+                
+                public void run() {  
+                	text.append("查询结束\n");
+                }
+  
+            });
 		}
 		public void plnum(){
-			for (int i = 1; i <= 10; i++) {
+			for (int i = 1; i <= 100; i++) {
 	    		if(stop){
 	    			break;
 	    		}
-	    		
-				try {
+	    		pageNo=i+"";
+				/*try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				}*/
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i);
 				if ("".equals(html)) {
 					i--;
@@ -127,6 +141,13 @@ public class Task extends Thread{
 					break;
 				}else{
 					System.out.println(i);
+					Display.getDefault().asyncExec(new Runnable(){  
+		                
+		                public void run() {  
+		                	text.append("第"+pageNo+"页\n");
+		                }
+		  
+		            });
 					Document doc = Jsoup.parse(html);
 					// 获取目标HTML代码
 					Elements elements1 = doc.select(".tr3.t_one.tac").select("td:eq(3)");
@@ -147,20 +168,27 @@ public class Task extends Thread{
 				}
 				
 			}
-			text.append("查询结束\n");
+			Display.getDefault().asyncExec(new Runnable(){  
+                
+                public void run() {  
+                	text.append("查询结束\n");
+                }
+  
+            });
+			
 		}
 		public void people(){
 			for (int i = 1; i <= 100; i++) {
 	    		if(stop){
 	    			break;
 	    		}
-	    		
-				try {
+	    		pageNo=i+"";
+				/*try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				}*/
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i);
 				if ("".equals(html)) {
 					i--;
@@ -176,6 +204,13 @@ public class Task extends Thread{
 					break;
 				}else{
 					System.out.println(i);
+					Display.getDefault().asyncExec(new Runnable(){  
+		                
+		                public void run() {  
+		                	text.append("第"+pageNo+"页\n");
+		                }
+		  
+		            });
 					Document doc = Jsoup.parse(html);
 					// 获取目标HTML代码
 					Elements elements1 = doc.select("tbody td a");
@@ -197,5 +232,12 @@ public class Task extends Thread{
 				}
 				
 			}
+			Display.getDefault().asyncExec(new Runnable(){  
+                
+                public void run() {  
+                	text.append("查询结束\n");
+                }
+  
+            });
 		}
 }

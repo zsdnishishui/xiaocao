@@ -33,7 +33,7 @@ public class MutiHello {
 		panel.setLayout(gPanelLay);
 		Composite composite = new Composite(panel,SWT.NONE);
 		GridLayout layoutComposite = new GridLayout();
-		layoutComposite.numColumns = 5;
+		layoutComposite.numColumns = 6;
 		layoutComposite.marginHeight = 1;
 		composite.setLayout(layoutComposite);   
 		Text name = new Text(composite, SWT.BORDER);
@@ -47,6 +47,8 @@ public class MutiHello {
 		butt.setText("查询标题");
 		Button pl = new Button(composite, SWT.PUSH);
 		pl.setText("回复数");
+		Button imgBut= new Button(composite, SWT.PUSH);
+		imgBut.setText("下载此页面中的图片");
 		Button stop = new Button(composite, SWT.PUSH);
 		stop.setText("停止");
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
@@ -55,6 +57,7 @@ public class MutiHello {
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
 		Task task = new Task(text);
+		TaskImg taskImg = new TaskImg(text);
 		// 为按键指定鼠标事件
 		butt.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
@@ -96,6 +99,12 @@ public class MutiHello {
 				if (!task.isStop()) {
 					task.start();
 				}
+			}
+		});
+		imgBut.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				taskImg.setTitle(name.getText());
+				taskImg.start();
 			}
 		});
 	}
