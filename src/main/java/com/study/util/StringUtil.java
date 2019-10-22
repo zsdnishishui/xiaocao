@@ -1,6 +1,7 @@
 package com.study.util;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class StringUtil {
 	/**
@@ -64,5 +65,8 @@ public class StringUtil {
 		
 		return UUID.randomUUID().toString().trim().replaceAll("-", "");
 	}
-
+	public static boolean isInteger(String str) {  
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");  
+        return pattern.matcher(str).matches();  
+}
 }

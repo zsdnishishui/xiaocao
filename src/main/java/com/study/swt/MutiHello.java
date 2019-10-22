@@ -31,28 +31,71 @@ public class MutiHello {
 		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
 		GridLayout gPanelLay = new GridLayout();
 		panel.setLayout(gPanelLay);
-		// 为Panel生成一个背景色
-		/*final Color bkColor = new Color(Display.getCurrent(), 200, 0, 200);
-		panel.setBackground(bkColor);*/
+		Composite composite = new Composite(panel,SWT.NONE);
+		GridLayout layoutComposite = new GridLayout();
+		layoutComposite.numColumns = 5;
+		layoutComposite.marginHeight = 1;
+		composite.setLayout(layoutComposite);   
+		Text name = new Text(composite, SWT.BORDER);
+		// 生成按键
+		Button butt = new Button(composite, SWT.PUSH);
+		// 生成STOP按键
+		Button search = new Button(composite, SWT.PUSH);
+		search.setText("查询发帖人");
+		// 生成STOP按键
+		
+		butt.setText("查询标题");
+		Button pl = new Button(composite, SWT.PUSH);
+		pl.setText("回复数");
+		Button stop = new Button(composite, SWT.PUSH);
+		stop.setText("停止");
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Text name = new Text(panel, SWT.BORDER);
-		// 生成按键
-		Button butt = new Button(panel, SWT.PUSH);
-		butt.setText("Push");
+		Task task = new Task(text);
 		// 为按键指定鼠标事件
 		butt.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				if (StringUtil.isEmpty(name.getText())) {
 					text.setText("标题不能为空");
 				}else{
-					Task task = new Task(text,name.getText());
-					task.start();
+					task.setTitle(name.getText());
+					task.setStop(false);
+					task.setFun("title");
+					if (!task.isStop()) {
+						task.start();
+					}
+					
+					
 				}
 				
+			}
+		});
+		stop.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setStop(true);
+			}
+		});
+		search.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("people");
+				task.setStop(false);
+				if (!task.isStop()) {
+					task.start();
+				}
+			}
+		});
+		pl.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("pl");
+				task.setStop(false);
+				if (!task.isStop()) {
+					task.start();
+				}
 			}
 		});
 	}
