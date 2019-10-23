@@ -313,7 +313,7 @@ public class MutiHello {
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		//data.heightHint = 200;
 		table.setLayoutData(data);
-		String[] titles = {"序号","标题", "类型", "记录时间", "结果", "操作"};
+		String[] titles = {"序号","标题", "类型", "记录时间", "操作"};
 		for (int i=0; i<titles.length; i++) {
 			TableColumn column = new TableColumn (table, SWT.NONE);
 			column.setText (titles [i]);
@@ -335,19 +335,18 @@ public class MutiHello {
 			editor.grabHorizontal = true;//自动填充表格
 			editor.minimumHeight = show.getSize().y;//设置editor最小高度
 			editor.minimumWidth = show.getSize().x;//最小宽度
-			item1.setText (0, i+"");
+			item1.setText (0, (i+1)+"");
 			item1.setText (1, title);
 			item1.setText (2, type);
 			item1.setText (3, addtime);
-			item1.setText (4, result);
-			editor.setEditor(show, item1, 5);//指定给哪个单元格设置该控件。
+			editor.setEditor(show, item1, 4);//指定给哪个单元格设置该控件。
 			show.addMouseListener(new MouseAdapter() {
 				public void mouseDown(MouseEvent e) {
 					/*MessageBox messageBox = new MessageBox(shell);
 			        messageBox.setMessage(item1.getText(4));
 			        messageBox.open();*/
 					//MessageDialog.openInformation(shell,"结果",item1.getText(4));
-					new Alert(item1.getText(4));
+					new Alert(result);
 				}
 			});
 		}
