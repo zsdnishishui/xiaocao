@@ -2,7 +2,6 @@ package com.study.swt;
 
 import java.util.List;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
@@ -23,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.study.util.Alert;
 import com.study.util.FileUtil;
 import com.study.util.StringUtil;
 
@@ -346,7 +346,8 @@ public class MutiHello {
 					/*MessageBox messageBox = new MessageBox(shell);
 			        messageBox.setMessage(item1.getText(4));
 			        messageBox.open();*/
-					MessageDialog.openInformation(shell,"结果",item1.getText(4));
+					//MessageDialog.openInformation(shell,"结果",item1.getText(4));
+					new Alert(item1.getText(4));
 				}
 			});
 		}
