@@ -1,16 +1,29 @@
 package com.study.swt;
 
+import java.util.List;
+
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.study.util.FileUtil;
 import com.study.util.StringUtil;
 
 public class MutiHello {
@@ -19,94 +32,30 @@ public class MutiHello {
     public MutiHello( ){init(); }
 
 	private void init() {
-		shell = new Shell();  
+		shell = new Shell();
+		shell.setText("小草社区（你懂的）");
 		// 为Shell设置布局对象
 		GridLayout gShellLay = new GridLayout();
 		shell.setLayout(gShellLay);
+		final TabFolder tabFolder = new TabFolder (shell, SWT.BORDER);
+		GridData tabData = new GridData(GridData.FILL_HORIZONTAL| GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		tabFolder.setLayoutData(tabData);
+		Rectangle clientArea = shell.getClientArea ();
+		tabFolder.setLocation (clientArea.x, clientArea.y);
+		TabItem item = new TabItem (tabFolder, SWT.NONE);
+		item.setText ("查询文本");
+		TabItem item2 = new TabItem (tabFolder, SWT.NONE);
+		item2.setText ("下载图片");
+		TabItem item3 = new TabItem (tabFolder, SWT.NONE);
+		item3.setText ("下载视频");
+		TabItem item4 = new TabItem (tabFolder, SWT.NONE);
+		item4.setText ("查询记录");
 		// 构造一个Composite构件作为文本框和按键的容器
-		Composite panel = new Composite(shell, SWT.NONE);
-		// 为Panel指定一个布局结构对象。这里让Panel尽可能的占满Shell，也就是全部应用程序窗口的空间。
-		GridData gPanelData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
-		panel.setLayoutData(gPanelData);
-		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
-		GridLayout gPanelLay = new GridLayout();
-		panel.setLayout(gPanelLay);
-		Composite composite = new Composite(panel,SWT.NONE);
-		GridLayout layoutComposite = new GridLayout();
-		layoutComposite.numColumns = 6;
-		layoutComposite.marginHeight = 1;
-		composite.setLayout(layoutComposite);   
-		Text name = new Text(composite, SWT.BORDER);
-		// 生成按键
-		Button butt = new Button(composite, SWT.PUSH);
-		// 生成STOP按键
-		Button search = new Button(composite, SWT.PUSH);
-		search.setText("查询发帖人");
-		// 生成STOP按键
-		
-		butt.setText("查询标题");
-		Button pl = new Button(composite, SWT.PUSH);
-		pl.setText("回复数");
-		Button imgBut= new Button(composite, SWT.PUSH);
-		imgBut.setText("下载此页面中的图片");
-		Button stop = new Button(composite, SWT.PUSH);
-		stop.setText("停止");
-		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
-		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
-		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
-		text.setLayoutData(gTextData);
-		Task task = new Task(text);
-		TaskImg taskImg = new TaskImg(text);
-		// 为按键指定鼠标事件
-		butt.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				if (StringUtil.isEmpty(name.getText())) {
-					text.setText("标题不能为空");
-				}else{
-					task.setTitle(name.getText());
-					task.setStop(false);
-					task.setFun("title");
-					if (!task.isStop()) {
-						task.start();
-					}
-					
-					
-				}
-				
-			}
-		});
-		stop.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				task.setStop(true);
-			}
-		});
-		search.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("people");
-				task.setStop(false);
-				if (!task.isStop()) {
-					task.start();
-				}
-			}
-		});
-		pl.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("pl");
-				task.setStop(false);
-				if (!task.isStop()) {
-					task.start();
-				}
-			}
-		});
-		imgBut.addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				taskImg.setTitle(name.getText());
-				taskImg.start();
-			}
-		});
+		tab1(item,tabFolder);
+		tab2(item2,tabFolder);
+		tab3(item3,tabFolder);
+		tab4(item4,tabFolder);
+		tabFolder.pack ();
 	}
 	public static void main(String[] args) {
 		Display display = Display.getDefault();  
@@ -138,7 +87,275 @@ public class MutiHello {
   
         this.shell = shell;  
   
-    } 
+    }
+    private void tab1(TabItem item,TabFolder tabFolder) {
+    	Composite panel = new Composite(tabFolder, SWT.NONE);
+		// 为Panel指定一个布局结构对象。这里让Panel尽可能的占满Shell，也就是全部应用程序窗口的空间。
+		GridData gPanelData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		panel.setLayoutData(gPanelData);
+		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
+		GridLayout gPanelLay = new GridLayout();
+		panel.setLayout(gPanelLay);
+		item.setControl (panel);
+		
+		
+		Text name = new Text(panel, SWT.BORDER|SWT.FILL);
+		//为标题框设置布局结构对象
+		GridData titleData = new GridData(GridData.FILL_HORIZONTAL);
+		name.setLayoutData(titleData);
+		Composite composite = new Composite(panel,SWT.NONE);
+		GridLayout layoutComposite = new GridLayout();
+		layoutComposite.numColumns = 6;
+		layoutComposite.marginHeight = 1;
+		composite.setLayout(layoutComposite);   
+		
+		// 生成按键
+		Button butt = new Button(composite, SWT.PUSH);
+		// 生成STOP按键
+		Button search = new Button(composite, SWT.PUSH);
+		search.setText("查询发帖人");
+		// 生成STOP按键
+		
+		butt.setText("查询标题");
+		Button pl = new Button(composite, SWT.PUSH);
+		pl.setText("回复数");
+		Button stop = new Button(composite, SWT.PUSH);
+		stop.setText("停止");
+		Button save = new Button(composite, SWT.PUSH);
+		save.setText("保存查询结果");
+		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
+		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
+		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		text.setLayoutData(gTextData);
+		Task task = new Task(text);
+		// 为按键指定鼠标事件
+		butt.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				if (StringUtil.isEmpty(name.getText())) {
+					text.setText("标题不能为空");
+				}else{
+					task.setTitle(name.getText());
+					
+					task.setFun("title");
+					if (!task.isStop()) {
+						task.start();
+					}
+					
+				}
+				
+			}
+		});
+		stop.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setStop(true);
+			}
+		});
+		search.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("people");
+				
+				if (!task.isStop()) {
+					task.start();
+				}
+			}
+		});
+		pl.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("pl");
+				
+				if (!task.isStop()) {
+					task.start();
+				}
+			}
+		});
+		save.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				String jieGuo  = text.getText();
+				String type = task.getFun();
+				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
+					FileUtil.writeFile(jieGuo,name.getText(),type);
+					text.append("\n保存成功");
+				}
+			}
+		});
+    }
+    private void tab2(TabItem item,TabFolder tabFolder) {
+    	Composite panel = new Composite(tabFolder, SWT.NONE);
+		// 为Panel指定一个布局结构对象。这里让Panel尽可能的占满Shell，也就是全部应用程序窗口的空间。
+		GridData gPanelData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		panel.setLayoutData(gPanelData);
+		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
+		GridLayout gPanelLay = new GridLayout();
+		panel.setLayout(gPanelLay);
+		item.setControl (panel);
+		//tabFolder.pack ();
+		
+		Text name = new Text(panel, SWT.BORDER|SWT.FILL);
+		//为标题框设置布局结构对象
+		GridData titleData = new GridData(GridData.FILL_HORIZONTAL);
+		name.setLayoutData(titleData);
+		Composite composite = new Composite(panel,SWT.NONE);
+		GridLayout layoutComposite = new GridLayout();
+		layoutComposite.numColumns = 6;
+		layoutComposite.marginHeight = 1;
+		composite.setLayout(layoutComposite);  
+		Button imgBut= new Button(composite, SWT.PUSH);
+		imgBut.setText("下载此页面中的图片");
+		Button save = new Button(composite, SWT.PUSH);
+		save.setText("保存下载记录");
+		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
+		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
+		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		text.setLayoutData(gTextData);
+		Task task = new Task(text);
+		// 为按键指定鼠标事件
+		
+		imgBut.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("downImg");
+				if (!task.isStop()) {
+					task.setStop(true);
+					task.start();
+				}
+			}
+		});
+		save.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				String jieGuo  = text.getText();
+				String type = task.getFun();
+				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
+					FileUtil.writeFile(jieGuo,name.getText(),type);
+					text.append("\n保存成功");
+				}
+			}
+		});
+    }
+    private void tab3(TabItem item,TabFolder tabFolder) {
+    	Composite panel = new Composite(tabFolder, SWT.NONE);
+		// 为Panel指定一个布局结构对象。这里让Panel尽可能的占满Shell，也就是全部应用程序窗口的空间。
+		GridData gPanelData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		panel.setLayoutData(gPanelData);
+		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
+		GridLayout gPanelLay = new GridLayout();
+		panel.setLayout(gPanelLay);
+		item.setControl (panel);
+		//tabFolder.pack ();
+		
+		Text name = new Text(panel, SWT.BORDER|SWT.FILL);
+		//为标题框设置布局结构对象
+		GridData titleData = new GridData(GridData.FILL_HORIZONTAL);
+		name.setLayoutData(titleData);
+		Composite composite = new Composite(panel,SWT.NONE);
+		GridLayout layoutComposite = new GridLayout();
+		layoutComposite.numColumns = 6;
+		layoutComposite.marginHeight = 1;
+		composite.setLayout(layoutComposite);  
+		Button imgBut= new Button(composite, SWT.PUSH);
+		imgBut.setText("下载此页面中的视频");
+		Button save = new Button(composite, SWT.PUSH);
+		save.setText("保存下载记录");
+		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
+		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
+		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		text.setLayoutData(gTextData);
+		Task task = new Task(text);
+		// 为按键指定鼠标事件
+		
+		imgBut.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				task.setTitle(name.getText());
+				task.setFun("downImg");
+				if (!task.isStop()) {
+					task.setStop(true);
+					task.start();
+				}
+			}
+		});
+		save.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				String jieGuo  = text.getText();
+				String type = task.getFun();
+				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
+					FileUtil.writeFile(jieGuo,name.getText(),type);
+					text.append("\n保存成功");
+				}
+			}
+		});
+    }
+    private void tab4(TabItem item,TabFolder tabFolder) {
+    	Composite panel = new Composite(tabFolder, SWT.NONE);
+		// 为Panel指定一个布局结构对象。这里让Panel尽可能的占满Shell，也就是全部应用程序窗口的空间。
+		GridData gPanelData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		panel.setLayoutData(gPanelData);
+		// 为Panel也设置一个布局对象。文本框和按键将按这个布局对象来显示。
+		GridLayout gPanelLay = new GridLayout();
+		panel.setLayout(gPanelLay);
+		item.setControl (panel);
+		//tabFolder.pack ();
+		
+		
+		Composite composite = new Composite(panel,SWT.NONE);
+		//为标题框设置布局结构对象
+		
+		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		composite.setLayoutData(gTextData);
+		GridLayout layoutComposite = new GridLayout();
+		composite.setLayout(layoutComposite);
+		Table table = new Table (composite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
+		table.setLinesVisible (true);
+		table.setHeaderVisible (true);
+		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+		//data.heightHint = 200;
+		table.setLayoutData(data);
+		String[] titles = {"序号","标题", "类型", "记录时间", "结果", "操作"};
+		for (int i=0; i<titles.length; i++) {
+			TableColumn column = new TableColumn (table, SWT.NONE);
+			column.setText (titles [i]);
+			column.setWidth(500);
+			column.pack();
+		}
+		List<String> list = FileUtil.readFile();
+		for (int i=0; i<list.size(); i++) {
+			String s = list.get(i);
+			JSONObject jsonObject = JSON.parseObject(s);
+	        String type = jsonObject.getString("type");
+	        String addtime = jsonObject.getString("addtime");
+	        String result = jsonObject.getString("result");
+	        String title = jsonObject.getString("title");
+			TableItem item1 = new TableItem (table, SWT.NONE);
+			Button show = new Button(table, SWT.PUSH);
+			show.setText("查看");
+			TableEditor editor = new TableEditor(table);
+			editor.grabHorizontal = true;//自动填充表格
+			editor.minimumHeight = show.getSize().y;//设置editor最小高度
+			editor.minimumWidth = show.getSize().x;//最小宽度
+			item1.setText (0, i+"");
+			item1.setText (1, title);
+			item1.setText (2, type);
+			item1.setText (3, addtime);
+			item1.setText (4, result);
+			editor.setEditor(show, item1, 5);//指定给哪个单元格设置该控件。
+			show.addMouseListener(new MouseAdapter() {
+				public void mouseDown(MouseEvent e) {
+					/*MessageBox messageBox = new MessageBox(shell);
+			        messageBox.setMessage(item1.getText(4));
+			        messageBox.open();*/
+					MessageDialog.openInformation(shell,"结果",item1.getText(4));
+				}
+			});
+		}
+		for (int i=0; i<titles.length; i++) {
+			table.getColumn (i).pack ();
+		}
+		
+		
+    }
 }
   
 

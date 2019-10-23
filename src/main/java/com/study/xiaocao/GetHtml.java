@@ -54,7 +54,9 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 		httpGet.setHeader("Accept-Encoding", "gzip, deflate");
 		httpGet.setHeader("Accept-Language", "zh-CN,zh;q=0.8");
 		httpGet.setHeader("User-Agent", headers[reand]);
-		//HttpHost proxy = new HttpHost("125.77.49.244", 808);
+		//httpGet.setHeader("x-forwarded-for","125.77.49.244");
+		//HttpHost proxy = new HttpHost("119.57.108.109", 53281, "http");
+		
 		// 响应模型
 		CloseableHttpResponse response = null;
 		try {
@@ -72,7 +74,12 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
  
 			// 将上面的配置信息 运用到这个Get请求里
 			httpGet.setConfig(requestConfig);
- 
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			// 由客户端执行(发送)Get请求
 			response = httpClient.execute(httpGet);
  
