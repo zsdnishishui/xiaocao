@@ -11,18 +11,23 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ProgressBar;
 
 public class DownloadImage implements Runnable {
-	 String downUrl;
-	 String url;
+	private String downUrl;
+	private String url;
+	private ProgressBar bar;
 	 /**
 	  * 
 	  * @param downUrl
 	  * @param url fileUrl
+	 * @param bar 
 	  */
-     public DownloadImage(String downUrl,String url){
+     public DownloadImage(String downUrl,String url, ProgressBar bar){
          this.downUrl = downUrl;
          this.url = url;
+         this.bar = bar;
      }
 	public void run() {
 		// 创建httpclient实例
@@ -34,6 +39,15 @@ public class DownloadImage implements Runnable {
         InputStream inputStream = pictureEntity.getContent();
         // 使用 common-io 下载图片到本地，注意图片名不能重复 ✔
         FileUtils.copyToFile(inputStream, new File(url));
+        Display.getDefault().asyncExec(new Runnable(){  
+            
+            public void run() {
+            	if (bar!=null) {
+            		bar.setSelection(bar.getSelection() + 1);
+				}
+            }
+
+        });
         pictureResponse.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

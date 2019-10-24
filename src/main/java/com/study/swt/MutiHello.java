@@ -12,6 +12,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -123,12 +124,16 @@ public class MutiHello {
 		stop.setText("停止");
 		Button save = new Button(composite, SWT.PUSH);
 		save.setText("保存查询结果");
+		//进度条
+		final ProgressBar bar = new ProgressBar(composite, SWT.SMOOTH);
+		bar.setMinimum(0);
+        bar.setMaximum(100); 
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text);
+		Task task = new Task(text,bar);
 		// 为按键指定鼠标事件
 		butt.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
@@ -173,7 +178,8 @@ public class MutiHello {
 		});
 		save.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				String jieGuo  = text.getText();
+				//注意这一步替换，不然无法解析json
+				String jieGuo  = text.getText().replace("\"", "\\\"");
 				String type = task.getFun();
 				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
 					FileUtil.writeFile(jieGuo,name.getText(),type);
@@ -206,12 +212,16 @@ public class MutiHello {
 		imgBut.setText("下载此页面中的图片");
 		Button save = new Button(composite, SWT.PUSH);
 		save.setText("保存下载记录");
+		//进度条
+		final ProgressBar bar = new ProgressBar(composite, SWT.SMOOTH);
+		bar.setMinimum(0);
+        //bar.setMaximum(100);
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text);
+		Task task = new Task(text,bar);
 		// 为按键指定鼠标事件
 		
 		imgBut.addMouseListener(new MouseAdapter() {
@@ -255,8 +265,8 @@ public class MutiHello {
 		layoutComposite.numColumns = 6;
 		layoutComposite.marginHeight = 1;
 		composite.setLayout(layoutComposite);  
-		Button imgBut= new Button(composite, SWT.PUSH);
-		imgBut.setText("下载此页面中的视频");
+		Button videoBut= new Button(composite, SWT.PUSH);
+		videoBut.setText("下载此页面中的视频");
 		Button save = new Button(composite, SWT.PUSH);
 		save.setText("保存下载记录");
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
@@ -264,13 +274,13 @@ public class MutiHello {
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text);
+		Task task = new Task(text,null);
 		// 为按键指定鼠标事件
 		
-		imgBut.addMouseListener(new MouseAdapter() {
+		videoBut.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				task.setTitle(name.getText());
-				task.setFun("downImg");
+				task.setFun("downVideo");
 				if (!task.isStop()) {
 					task.setStop(true);
 					task.start();
@@ -301,25 +311,41 @@ public class MutiHello {
 		
 		
 		Composite composite = new Composite(panel,SWT.NONE);
-		//为标题框设置布局结构对象
 		
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		composite.setLayoutData(gTextData);
 		GridLayout layoutComposite = new GridLayout();
 		composite.setLayout(layoutComposite);
+		Button refresh = new Button(composite, SWT.PUSH);
+		refresh.setText("刷新");
 		Table table = new Table (composite, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
 		table.setLinesVisible (true);
 		table.setHeaderVisible (true);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 		//data.heightHint = 200;
 		table.setLayoutData(data);
-		String[] titles = {"序号","标题", "类型", "记录时间", "操作"};
+		String[] titles = {"序号","搜索", "类型", "记录时间", "操作"};
 		for (int i=0; i<titles.length; i++) {
 			TableColumn column = new TableColumn (table, SWT.NONE);
 			column.setText (titles [i]);
-			column.setWidth(500);
 			column.pack();
 		}
+		refreshTable(table,titles.length);
+		refresh.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				TableItem tableItems[] = table.getItems();//得到所有的tableItem
+	            for(int i = 0; i<tableItems.length; i++)
+	            {
+	                tableItems[i].dispose();//释放
+	            }
+				refreshTable(table,titles.length);
+			}
+		});
+		
+		
+    }
+    public void refreshTable(Table table, int length){
+
 		List<String> list = FileUtil.readFile();
 		for (int i=0; i<list.size(); i++) {
 			String s = list.get(i);
@@ -350,11 +376,9 @@ public class MutiHello {
 				}
 			});
 		}
-		for (int i=0; i<titles.length; i++) {
+		for (int i=0; i<length; i++) {
 			table.getColumn (i).pack ();
 		}
-		
-		
     }
 }
   
