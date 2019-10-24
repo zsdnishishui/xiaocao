@@ -1,19 +1,25 @@
 package com.study.test;
 
+import java.io.IOException;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
+import com.gargoylesoftware.htmlunit.html.DomNodeList;
+import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
+import com.gargoylesoftware.htmlunit.html.HtmlArea;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class Test {
 	public static void main(String[] args) {
 
-		final WebClient webClient = new WebClient(BrowserVersion.CHROME);//新建一个模拟谷歌Chrome浏览器的浏览器客户端对象
+		final WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);//新建一个模拟谷歌Chrome浏览器的浏览器客户端对象
 
-	    webClient.getOptions().setThrowExceptionOnScriptError(true);//当JS执行出错的时候是否抛出异常, 这里选择不需要
+	    webClient.getOptions().setThrowExceptionOnScriptError(false);//当JS执行出错的时候是否抛出异常, 这里选择不需要
 	    webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);//当HTTP的状态非200时是否抛出异常, 这里选择不需要
 	    webClient.getOptions().setActiveXNative(false);
 	    webClient.getOptions().setCssEnabled(false);//是否启用CSS, 因为不需要展现页面, 所以不需要启用
@@ -22,7 +28,7 @@ public class Test {
 
 	    HtmlPage page = null;
 	    try {
-	        page = webClient.getPage("https://yaoshe81.com/embed/14925");//尝试加载上面图片例子给出的网页
+	        page = webClient.getPage("https://yaoshe81.com/embed/14921");//尝试加载上面图片例子给出的网页
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }finally {
@@ -31,10 +37,13 @@ public class Test {
 
 	    webClient.waitForBackgroundJavaScript(30000);//异步JS执行需要耗时,所以这里线程要阻塞30秒,等待异步JS执行结束
 
-	    String pageXml = page.asXml();//直接将加载完成的页面转换成xml格式的字符串
+	    
 
 	    //TODO 下面的代码就是对字符串的操作了,常规的爬虫操作,用到了比较好用的Jsoup库
-	    System.out.println(pageXml);
+	    
+	   
+	    String pageXml = page.asXml();//直接将加载完成的页面转换成xml格式的字符串
+	  System.out.println(pageXml);
 	    Document document = Jsoup.parse(pageXml);//获取html文档
 	}
 }

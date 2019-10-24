@@ -345,7 +345,7 @@ public class Task extends Thread{
 		        String url2 =html3.substring(12, html3.indexOf(",")-1);
 		        String toGetUrl = url2.substring(url2.indexOf("http"));
 		        System.out.println(toGetUrl);
-		        String realUrl = GetHtml.realUrl(toGetUrl+"&rnd="+rnd.substring(6,rnd.indexOf(",")-1));
+		        String realUrl = GetHtml.realUrl(toGetUrl);
 		        DownVideo down = new DownVideo();
 		        String dir=title.replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "");
 		        down.startDown(diaoNaoUrl+dir+"/",realUrl);
