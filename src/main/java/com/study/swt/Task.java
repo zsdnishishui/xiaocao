@@ -334,13 +334,22 @@ public class Task extends Thread{
 		        String src = elements1.get(1).attr("onclick").split("=")[1];
 		        String url = src.substring(1, src.indexOf("#"));
 		        String html2 = GetHtml.getHtml(url,false);
+		        while(StringUtil.isEmpty(html2)){
+		        	html2 = GetHtml.getHtml(url,false);
+		        }
+		        //获取视频需要这个参数
+		        String rnd = html2.substring(html2.indexOf("rnd: "));
+		        
 		        String html3 =html2.substring(html2.indexOf("video_url: '"));
+		        
 		        String url2 =html3.substring(12, html3.indexOf(",")-1);
-		        String realUrl = GetHtml.realUrl(url2);
+		        String toGetUrl = url2.substring(url2.indexOf("http"));
+		        System.out.println(toGetUrl);
+		        String realUrl = GetHtml.realUrl(toGetUrl+"&rnd="+rnd.substring(6,rnd.indexOf(",")-1));
 		        DownVideo down = new DownVideo();
 		        String dir=title.replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "");
 		        down.startDown(diaoNaoUrl+dir+"/",realUrl);
-		        down.printProgress();
+		        down.printProgress(bar);
 			}
 		}
 }

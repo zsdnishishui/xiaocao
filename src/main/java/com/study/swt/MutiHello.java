@@ -269,12 +269,16 @@ public class MutiHello {
 		videoBut.setText("下载此页面中的视频");
 		Button save = new Button(composite, SWT.PUSH);
 		save.setText("保存下载记录");
+		//进度条
+		final ProgressBar bar = new ProgressBar(composite, SWT.SMOOTH);
+		bar.setMinimum(0);
+		bar.setMaximum(100);
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text,null);
+		Task task = new Task(text,bar);
 		// 为按键指定鼠标事件
 		
 		videoBut.addMouseListener(new MouseAdapter() {
