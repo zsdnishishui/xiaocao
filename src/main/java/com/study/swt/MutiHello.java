@@ -26,6 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.study.util.Alert;
 import com.study.util.FileUtil;
 import com.study.util.StringUtil;
+import com.study.util.caoliuVideoThread;
 
 public class MutiHello {
 	private Shell shell = null;  
@@ -74,6 +75,7 @@ public class MutiHello {
             }  
   
         }  
+        System.exit(0);
 	}
 
 	 //获得和设置属性的getter和setter方法  
@@ -267,6 +269,11 @@ public class MutiHello {
 		composite.setLayout(layoutComposite);  
 		Button videoBut= new Button(composite, SWT.PUSH);
 		videoBut.setText("下载此页面中的视频");
+		
+		Button susBut= new Button(composite, SWT.PUSH);
+		susBut.setText("暂停下载");
+		Button reBut= new Button(composite, SWT.PUSH);
+		reBut.setText("重新下载");
 		Button save = new Button(composite, SWT.PUSH);
 		save.setText("保存下载记录");
 		//进度条
@@ -289,6 +296,24 @@ public class MutiHello {
 					task.setStop(true);
 					task.start();
 				}
+			}
+		});
+		
+		reBut.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				Task reTask = new Task(text,bar);
+				reTask.setTitle(name.getText());
+				reTask.setFun("downVideo");
+				caoliuVideoThread.stop=false;
+				if (!reTask.isStop()) {
+					reTask.setStop(true);
+					reTask.start();
+				}
+			}
+		});
+		susBut.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				caoliuVideoThread.stop=true;
 			}
 		});
 		save.addMouseListener(new MouseAdapter() {

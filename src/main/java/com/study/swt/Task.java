@@ -73,7 +73,6 @@ public class Task extends Thread{
 	    		if(stop){
 	    			break;
 	    		}
-	    		pageNo=i+"";
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
@@ -132,7 +131,6 @@ public class Task extends Thread{
 	    		if(stop){
 	    			break;
 	    		}
-	    		pageNo=i+"";
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
@@ -148,12 +146,14 @@ public class Task extends Thread{
 					break;
 				}else{
 					System.out.println(i);
-					Display.getDefault().asyncExec(new Runnable(){  
-		                
-		                public void run() {  
-		                	text.append("第"+pageNo+"页\n");
-		                }
-		  
+					Display.getDefault().asyncExec(new Runnable(){
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							if (bar!=null) {
+		                		bar.setSelection(bar.getSelection() + 1);
+							}
+						}  
 		            });
 					Document doc = Jsoup.parse(html);
 					// 获取目标HTML代码
@@ -189,7 +189,6 @@ public class Task extends Thread{
 	    		if(stop){
 	    			break;
 	    		}
-	    		pageNo=i+"";
 				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
@@ -207,9 +206,13 @@ public class Task extends Thread{
 					System.out.println(i);
 					Display.getDefault().asyncExec(new Runnable(){  
 		                
-		                public void run() {  
-		                	text.append("第"+pageNo+"页\n");
-		                }
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							if (bar!=null) {
+		                		bar.setSelection(bar.getSelection() + 1);
+							}
+						}
 		  
 		            });
 					Document doc = Jsoup.parse(html);
@@ -331,25 +334,44 @@ public class Task extends Thread{
 	                	text.append(title+"\n");
 	                }
 	            });
-		        String src = elements1.get(1).attr("onclick").split("=")[1];
-		        String url = src.substring(1, src.indexOf("#"));
+		        String src = elements1.get(1).attr("onclick");
+		        //getElementById('iframe1').src='http://www.uuge010.com/play/video.php?id=64#iframeload'
+		        String url = src.substring(src.indexOf("=")+2,src.indexOf("#"));
 		        String html2 = GetHtml.getHtml(url,false);
 		        while(StringUtil.isEmpty(html2)){
 		        	html2 = GetHtml.getHtml(url,false);
 		        }
-		        //获取视频需要这个参数
-		        String rnd = html2.substring(html2.indexOf("rnd: "));
-		        
-		        String html3 =html2.substring(html2.indexOf("video_url: '"));
-		        
-		        String url2 =html3.substring(12, html3.indexOf(",")-1);
-		        String toGetUrl = url2.substring(url2.indexOf("http"));
-		        System.out.println(toGetUrl);
-		        String realUrl = GetHtml.realUrl(toGetUrl);
+		        String realUrl ="";
+		        if (html2.indexOf("video_url: '")>0) {
+		        	String html3 =html2.substring(html2.indexOf("video_url: '"));
+			        
+			        String url2 =html3.substring(12, html3.indexOf(",")-1);
+			        String toGetUrl = url2.substring(url2.indexOf("http"));
+			        realUrl = GetHtml.realUrl(toGetUrl);
+				}else if (html2.indexOf("video: '")>0) {
+					String html3 =html2.substring(html2.indexOf("video: '")+8);
+					realUrl =html3.substring(0, html3.indexOf("'"));
+				}else{
+					doc = Jsoup.parse(html2);
+					String videoSrc = doc.select("iframe").get(0).attr("src");
+					realUrl = videoSrc.split("=")[1];
+				}
+		        System.out.println(realUrl);
 		        DownVideo down = new DownVideo();
 		        String dir=title.replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "");
-		        down.startDown(diaoNaoUrl+dir+"/",realUrl);
-		        down.printProgress(bar);
+		       int res = down.startDown(diaoNaoUrl+dir+"/",realUrl);
+		       if(res!=-1){
+		    	   down.printProgress(bar); 
+		       }else{
+		    	   Display.getDefault().asyncExec(new Runnable(){  
+		                
+		                public void run() {  
+		                	text.append("下载失败");
+		                }
+		  
+		            });
+		       }
+		        
 			}
 		}
 }

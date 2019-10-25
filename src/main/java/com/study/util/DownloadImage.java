@@ -38,6 +38,9 @@ public class DownloadImage implements Runnable {
         HttpEntity pictureEntity = pictureResponse.getEntity();
         InputStream inputStream = pictureEntity.getContent();
         // 使用 common-io 下载图片到本地，注意图片名不能重复 ✔
+        if (!url.contains(".")) {
+			url+=".jpg";
+		}
         FileUtils.copyToFile(inputStream, new File(url));
         Display.getDefault().asyncExec(new Runnable(){  
             

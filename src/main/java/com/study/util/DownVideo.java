@@ -33,7 +33,7 @@ public class DownVideo {
 		
 		return (float) (reveive*100.0/length);
 	}
-	public void startDown(String dirUrl, String realUrl){
+	public int startDown(String dirUrl, String realUrl){
 		try {
 			//实现https免证书认证
 			CloseableHttpClient httpclient = HttpClients.custom()
@@ -50,6 +50,9 @@ public class DownVideo {
 	        HttpEntity responseEntity = response.getEntity();
 	        length = responseEntity.getContentLength();
 	        System.out.println(length);
+	        if (length<=1000) {
+				return -1;
+			}
 	      //创建一个缓冲池
 	        ExecutorService pool = Executors.newCachedThreadPool();
 	        //设置其容量为9
@@ -86,11 +89,15 @@ public class DownVideo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return 0;
 	}
 	public void printProgress(ProgressBar bar){
 		final Timer timer = new Timer();  
 	    timer.scheduleAtFixedRate(new TimerTask() {  
-	            public void run() {  
+	            public void run() {
+	            	if (caoliuVideoThread.stop) {
+	            		timer.cancel();
+					}
 	            	float pro =getDownloadProgress(); 
 	            	Display.getDefault().asyncExec(new Runnable(){  
 	                    
@@ -105,9 +112,20 @@ public class DownVideo {
 	                if(pro >= 99.9){
 	                	System.out.println("下载完成"); 
 	                	timer.cancel();
-	                	MessageBox messageBox = new MessageBox(bar.getShell());
-				        messageBox.setMessage("下载完成");
-				        messageBox.open();
+	                	Display.getDefault().asyncExec(new Runnable(){
+
+							@Override
+							public void run() {
+								// TODO Auto-generated method stub
+								MessageBox messageBox = new MessageBox(bar.getShell());
+						        messageBox.setMessage("下载完成");
+						        messageBox.open();
+							}  
+		                    
+	                		
+
+		                });
+	                	
 	                } 
 	            }  
 	    }, 1000 , 2000);

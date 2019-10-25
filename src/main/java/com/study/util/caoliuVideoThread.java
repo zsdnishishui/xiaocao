@@ -24,12 +24,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
 public class caoliuVideoThread implements Runnable{
-	 int start;
-	 int end;
-	 String fileName;
-	 String downUrl;
-	 String dir;
-	 int i;
+	private int start;
+	private int end;
+	private String fileName;
+	private String downUrl;
+	private String dir;
+	public static boolean stop=false;
+	private int i;
 	public caoliuVideoThread(int start, int end, String dir,
 			String fileName, String realUrl, int i) {
 		super();
@@ -98,7 +99,7 @@ public class caoliuVideoThread implements Runnable{
 			raf.seek(start);
 			int readcode = 0;
 			int total = 0;
-			while ((readcode = is.read(b)) != -1) {
+			while ((readcode = is.read(b)) != -1&&!stop) {
 				DownVideo.reveive+=readcode;
 				total+=readcode;
 				//每次下载都把新的下载位置写入缓存文本文件 断点续传
