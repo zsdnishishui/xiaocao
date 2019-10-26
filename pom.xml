@@ -1,121 +1,54 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.study</groupId>
-  <artifactId>xiaocao</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.study</groupId>
+	<artifactId>xiaocao</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
-	<dependency>
-  <!-- jsoup HTML parser library @ https://jsoup.org/ -->
-  <groupId>org.jsoup</groupId>
-  <artifactId>jsoup</artifactId>
-  <version>1.6.1</version>
-</dependency>
-<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.10</version>
-        </dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.10</version>
+		</dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-<dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpclient</artifactId>
-    <version>4.3.6</version>
-</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.3</version>
+		</dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <version>4.5.4</version>
-        </dependency>
-        <dependency>
-    <groupId>com.arronlong</groupId>
-    <artifactId>httpclientutil</artifactId>
-    <version>1.0.4</version>
-</dependency>
-<dependency>
-    <groupId>commons-net</groupId>
-    <artifactId>commons-net</artifactId>
-    <version>3.6</version>
-</dependency>
-<!-- <dependency>
-    <groupId>org.htmlparser</groupId>
-    <artifactId>htmlparser</artifactId>
-    <version>2.1</version>
-</dependency>
-<dependency>
-    <groupId>org.brotli</groupId>
-    <artifactId>dec</artifactId>
-    <version>0.1.2</version>
-</dependency>
-<dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>htmlunit-driver</artifactId>
-    <version>2.35.1</version>
-</dependency> -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.arronlong</groupId>
+			<artifactId>httpclientutil</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>fastjson</artifactId>
-    <version>1.2.47</version>
-</dependency>
-<!-- <dependency>
-	    <groupId>net.sourceforge.htmlunit</groupId>
-	    <artifactId>htmlunit</artifactId>
-	    <version>2.15</version>
-	</dependency>
-	<dependency>
-    <groupId>org.apache.httpcomponents</groupId>
-    <artifactId>httpmime</artifactId>
-    <version>4.3.3</version>
-</dependency>
-<dependency>
-    <groupId>commons-collections</groupId>
-    <artifactId>commons-collections</artifactId>
-    <version>3.2.1</version>
-</dependency>
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-lang3</artifactId>
-    <version>3.4</version>
-</dependency>
-<dependency>
-    <groupId>net.sourceforge.cssparser</groupId>
-    <artifactId>cssparser</artifactId>
-    <version>0.9.14</version>
-</dependency> -->
-<!-- jar冲突 <dependency>
-    <groupId>net.sourceforge.nekohtml</groupId>
-    <artifactId>nekohtml</artifactId>
-    <version>1.9.14</version>
-</dependency> -->
-<!-- <dependency>
-    <groupId>xalan</groupId>
-    <artifactId>xalan</artifactId>
-    <version>2.7.1</version>
-</dependency> -->
-<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
-<!-- <dependency>
-    <groupId>xerces</groupId>
-    <artifactId>xercesImpl</artifactId>
-    <version>2.9.1</version>
-</dependency>
- <dependency>  
-            <groupId>xml-apis</groupId>  
-            <artifactId>xml-apis</artifactId>  
-            <version>1.4.01</version>  
-        </dependency>  -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.47</version>
+		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.swt.win32.win32.x86_64</artifactId>
@@ -165,31 +98,31 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			<!-- 这里不需要指定groupId，默认为org.apache.maven.plugins -->
-			<artifactId>maven-assembly-plugin</artifactId>
-			<version>3.1.0</version>
-			<configuration>
-				<archive>
-					<manifest>
-						<addClasspath>true</addClasspath>
-						<mainClass>com.study.swt.MutiHello</mainClass>
-					</manifest>
-				</archive>
-				<descriptorRefs>
-					<descriptorRef>jar-with-dependencies</descriptorRef>
-				</descriptorRefs>
-			</configuration>
-			<executions>
-				<execution>
-					<id>make-assembly</id> <!-- this is used for inheritance merges -->
-					<phase>package</phase> <!-- bind to the packaging phase -->
-					<goals>
-						<goal>single</goal>
-					</goals>
-				</execution>
-			</executions>
-		</plugin>
+				<!-- 这里不需要指定groupId，默认为org.apache.maven.plugins -->
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>com.study.swt.MutiHello</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
- 
+
 </project>
