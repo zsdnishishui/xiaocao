@@ -100,9 +100,8 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 		}
         return html;
     }
-    public static  String realUrl (String url){
+    public static  String realUrl (CloseableHttpClient httpClient,String url){
         String realUrl = "";
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpContext httpContext = new BasicHttpContext();
 		// 创建Get请求
 		HttpGet httpGet = new HttpGet(url);
@@ -146,9 +145,6 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 		} finally {
 			try {
 				// 释放资源
-				if (httpClient != null) {
-					httpClient.close();
-				}
 				if (response != null) {
 					response.close();
 				}
@@ -157,5 +153,61 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 			}
 		}
         return realUrl;
+    }
+    public static  String getHtmlForEach (CloseableHttpClient httpClient,String url,boolean flag){
+        String html = "";
+		// 创建Get请求
+		HttpGet httpGet = new HttpGet(url);
+		
+		// 响应模型
+		CloseableHttpResponse response = null;
+		try {
+			// 配置信息
+			RequestConfig requestConfig = RequestConfig.custom()
+					//.setProxy(proxy)
+					// 设置连接超时时间(单位毫秒)
+					.setConnectTimeout(5000)
+					// 设置请求超时时间(单位毫秒)
+					.setConnectionRequestTimeout(5000)
+					// socket读写超时时间(单位毫秒)
+					.setSocketTimeout(5000)
+					// 设置是否允许重定向(默认为true)
+					.build();
+ 
+			// 将上面的配置信息 运用到这个Get请求里
+			httpGet.setConfig(requestConfig);
+			if (flag) {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			// 由客户端执行(发送)Get请求
+			response = httpClient.execute(httpGet);
+ 
+			// 从响应模型中获取响应实体
+			HttpEntity responseEntity = response.getEntity();
+			if (responseEntity != null) {
+				html = new String(EntityUtils.toString(responseEntity).getBytes("ISO-8859-1"),"gbk");
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// 释放资源
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+        return html;
     }
 }

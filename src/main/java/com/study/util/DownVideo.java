@@ -1,6 +1,11 @@
 package com.study.util;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -25,15 +30,42 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ProgressBar;
 
 public class DownVideo {
-    long length=0;
-    public static long reveive=0;//这是全局(全项目)变量，而 long reveive=0；也是全局变量，只是在这个类中是
-    
+	private long length=0;
+    //public static long reveive=0;//这是全局(全项目)变量，而 long reveive=0；也是全局变量，只是在这个类中是
+    private String dirUrl;
+    /**
+     * 注意此方法与下载方法完全独立
+     * @return
+     */
 	public float getDownloadProgress()
 	{
+		long reveive=0;
+		int size = 5;
+		long block = length % size == 0 ? length / size : length / size + 1;
+		for (int i = 0; i < 5; i++) {
+			File huancun = new File(dirUrl+i+".txt");
+			if(huancun.exists()){
+				try {
+					FileInputStream fis = new FileInputStream(huancun);
+					BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+					String line = br.readLine();
+					if (line!=null) {
+						int last = Integer.valueOf(line);
+			        	reveive+=(last-block*i+1);
+					}
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
 		
 		return (float) (reveive*100.0/length);
 	}
 	public int startDown(String dirUrl, String realUrl){
+		this.dirUrl=dirUrl;
 		try {
 			//实现https免证书认证
 			CloseableHttpClient httpclient = HttpClients.custom()

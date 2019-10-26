@@ -74,7 +74,7 @@ public class caoliuVideoThread implements Runnable{
 				FileInputStream fis = new FileInputStream(huancun);
 				BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 				int last = Integer.valueOf(br.readLine());
-	        	DownVideo.reveive+=last-start+1;
+	        	//DownVideo.reveive+=last-start+1;
 	        	start=last;
 			}
 				
@@ -99,14 +99,19 @@ public class caoliuVideoThread implements Runnable{
 			raf.seek(start);
 			int readcode = 0;
 			int total = 0;
-			while ((readcode = is.read(b)) != -1&&!stop) {
-				DownVideo.reveive+=readcode;
-				total+=readcode;
-				//每次下载都把新的下载位置写入缓存文本文件 断点续传
-				FileWriter  writeName = new FileWriter(dir+i+".txt");
-			    writeName.write(start + total+"");
-			    writeName.close();
-				raf.write(b, 0, readcode);
+			while ((readcode = is.read(b)) != -1) {
+				
+				if (stop) {
+					return;
+				}else{
+					total+=readcode;
+					//每次下载都把新的下载位置写入缓存文本文件 断点续传
+					FileWriter  writeName = new FileWriter(dir+i+".txt");
+				    writeName.write(start + total+"");
+				    writeName.close();
+					raf.write(b, 0, readcode);
+				}
+				
 			}
 			raf.close();
 			is.close();

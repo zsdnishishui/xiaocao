@@ -1,5 +1,6 @@
 package com.study.swt;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Text;
@@ -69,11 +72,13 @@ public class Task extends Thread{
 	  
 	    } 
 		public void title(){
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
 	    		if(stop){
 	    			break;
 	    		}
-				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
+	    		
+				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -103,11 +108,21 @@ public class Task extends Thread{
 					Elements elements2 = elements1.select(".tal").select("h3");
 					for (Element ele : elements2) {
 						if (ele.text().contains(title)) {
+							Element parent = ele.parent().parent();
 							Display.getDefault().asyncExec(new Runnable(){  
-				                
 				                public void run() {  
-				  
-				                	text.append(ele.text() + "：页面链接：https://cl.w8li.com/" + ele.parent().parent().select("h3 a").attr("href")+"\n");
+				                	String time = parent.child(2).text();
+									if (time.contains("昨天")) {
+										Date today = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										String yesterday = simpleDateFormat.format(today);
+										time=time.replace("昨天", yesterday);
+									}else if (time.contains("今天")) {
+										Date today = new Date();
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										time=time.replace("今天", simpleDateFormat.format(today));
+									}
+				                	text.append(time+"："+ele.text() + "：页面链接：https://cl.w8li.com/" + parent.select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
@@ -118,6 +133,14 @@ public class Task extends Thread{
 				}
 				
 			}
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			Display.getDefault().asyncExec(new Runnable(){  
                 
                 public void run() {  
@@ -127,11 +150,13 @@ public class Task extends Thread{
             });
 		}
 		public void plnum(){
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
 	    		if(stop){
 	    			break;
 	    		}
-				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
+	    		
+				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -163,8 +188,18 @@ public class Task extends Thread{
 							Display.getDefault().asyncExec(new Runnable(){  
 				                
 				                public void run() {  
-				  
-				                	text.append(ele.parent().select(".tal").select("h3").text()+ "：页面链接：https://cl.w8li.com/" + ele.parent().select("h3 a").attr("href")+"\n");
+				                	String time = ele.parent().child(2).text();
+									if (time.contains("昨天")) {
+										Date today = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										String yesterday = simpleDateFormat.format(today);
+										time=time.replace("昨天", yesterday);
+									}else if (time.contains("今天")) {
+										Date today = new Date();
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										time=time.replace("今天", simpleDateFormat.format(today));
+									}
+				                	text.append(time+"："+ele.parent().select(".tal").select("h3").text()+ "：页面链接：https://cl.w8li.com/" + ele.parent().select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
@@ -174,6 +209,14 @@ public class Task extends Thread{
 					}
 				}
 				
+			}
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			Display.getDefault().asyncExec(new Runnable(){  
                 
@@ -185,11 +228,13 @@ public class Task extends Thread{
 			
 		}
 		public void people(){
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
 	    		if(stop){
 	    			break;
 	    		}
-				String html = GetHtml.getHtml("https://cl.w8li.com/thread0806.php?fid=7&search=&page=" + i,true);
+	    		
+				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -221,11 +266,22 @@ public class Task extends Thread{
 					Elements elements2 = elements1.select(".bl");
 					for (Element ele : elements2) {
 						if (ele.text().equals(title)) {
+							Element tr = ele.parent().parent(); 
 							Display.getDefault().asyncExec(new Runnable(){  
 				                
 				                public void run() {  
-				  
-				                	text.append(ele.parent().parent().select(".tal").select("h3").text() + "：页面链接：https://cl.w8li.com/" + ele.parent().parent().select("h3 a").attr("href")+"\n");
+				                	String time = tr.child(2).text();
+									if (time.contains("昨天")) {
+										Date today = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										String yesterday = simpleDateFormat.format(today);
+										time=time.replace("昨天", yesterday);
+									}else if (time.contains("今天")) {
+										Date today = new Date();
+										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+										time=time.replace("今天", simpleDateFormat.format(today));
+									}
+				                	text.append(time+"："+tr.select(".tal").select("h3").text() + "：页面链接：https://cl.w8li.com/" + tr.select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
@@ -235,6 +291,14 @@ public class Task extends Thread{
 					}
 				}
 				
+			}
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			Display.getDefault().asyncExec(new Runnable(){  
                 
@@ -247,27 +311,23 @@ public class Task extends Thread{
 		public void downImg(){
 			String html = GetHtml.getHtml(title,false);
 			if ("".equals(html)) {
-				Display.getDefault().asyncExec(new Runnable(){  
-	                
+				Display.getDefault().asyncExec(new Runnable(){
 	                public void run() {  
 	                	text.setText("止路径请求失败");
 	                }
-	  
 	            });
 			}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
-				
 				Display.getDefault().asyncExec(new Runnable(){  
-	                
 	                public void run() {  
 	                	text.setText("ip被锁");
 	                }
-	  
 	            });
 			}else{
 				List<String> listImgUrl = new ArrayList<String>();
 		    	Document doc = Jsoup.parse(html);
 		        // 获取目标HTML代码
 		        Elements elements1 = doc.select("img");
+		        Elements elements2 = doc.select("input");
 		        Elements topName = doc.select("h4");
 		        Display.getDefault().asyncExec(new Runnable(){  
 	                public void run() {  
@@ -278,12 +338,21 @@ public class Task extends Thread{
 		        	String url = ele.attr("data-src");
 		        	if (!"".equals(url)) {
 						listImgUrl.add(url);
-						Display.getDefault().asyncExec(new Runnable(){  
-			                public void run() {  
-			                	text.append(url+"\n");
-			                }
-			            });
 					}
+		        }
+		        for(Element ele:elements2){
+		        	
+		        	if ("image".equals(ele.attr("type"))) {
+		        		String url = ele.attr("data-src");
+			        	if (!"".equals(url)) {
+			        		if (url.contains("sinaimg")) {
+			        			url=url.replace("https:", "http:");
+							}
+							listImgUrl.add(url);
+							
+						}
+					}
+		        	
 		        }
 		        Display.getDefault().asyncExec(new Runnable(){  
 	                public void run() {  
@@ -298,14 +367,15 @@ public class Task extends Thread{
 		        
 		        for(String url:listImgUrl){
 		            String imageName = url.substring(url.lastIndexOf("/") + 1, url.length());
-		            pool.execute(new DownloadImage(url,diaoNaoUrl+topName.get(0).text().replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "")+"/"+imageName,bar));
+		            pool.execute(new DownloadImage(url,diaoNaoUrl+topName.get(0).text().replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "")+"/"+imageName,bar,text));
 		        }
 		        pool.shutdown();
 		        //线程池关闭了，但是线程没有关闭
 			}
 		}
 		public void downVideo(){
-			String html = GetHtml.getHtml(title,false);
+			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+			String html = GetHtml.getHtmlForEach(httpClient,title,false);
 			if ("".equals(html)) {
 				Display.getDefault().asyncExec(new Runnable(){  
 	                
@@ -337,9 +407,21 @@ public class Task extends Thread{
 		        String src = elements1.get(1).attr("onclick");
 		        //getElementById('iframe1').src='http://www.uuge010.com/play/video.php?id=64#iframeload'
 		        String url = src.substring(src.indexOf("=")+2,src.indexOf("#"));
-		        String html2 = GetHtml.getHtml(url,false);
+		        String html2 = GetHtml.getHtmlForEach(httpClient,url,false);
+		        int n=0;
 		        while(StringUtil.isEmpty(html2)){
-		        	html2 = GetHtml.getHtml(url,false);
+		        	html2 = GetHtml.getHtmlForEach(httpClient,url,false);
+		        	n++;
+		        	if (n>1) {
+		        		Display.getDefault().asyncExec(new Runnable(){  
+			                
+			                public void run() {  
+			                	text.setText("下载失败");
+			                }
+			  
+			            });
+						return; 
+					}
 		        }
 		        String realUrl ="";
 		        if (html2.indexOf("video_url: '")>0) {
@@ -347,7 +429,7 @@ public class Task extends Thread{
 			        
 			        String url2 =html3.substring(12, html3.indexOf(",")-1);
 			        String toGetUrl = url2.substring(url2.indexOf("http"));
-			        realUrl = GetHtml.realUrl(toGetUrl);
+			        realUrl = GetHtml.realUrl(httpClient,toGetUrl);
 				}else if (html2.indexOf("video: '")>0) {
 					String html3 =html2.substring(html2.indexOf("video: '")+8);
 					realUrl =html3.substring(0, html3.indexOf("'"));
@@ -372,6 +454,14 @@ public class Task extends Thread{
 		            });
 		       }
 		        
+			}
+			if (httpClient != null) {
+				try {
+					httpClient.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 }

@@ -1,18 +1,19 @@
 package com.study.util;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
  
  
 public class Alert {
  
  
- public Alert(String message) {
+ public Alert(String message, TableItem item) {
   Shell shell = new Shell();
   shell.setText("展示结果");
   GridLayout gShellLay = new GridLayout();
@@ -22,7 +23,17 @@ public class Alert {
 	// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 	GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 	text.setLayoutData(gTextData);
-	text.setText(message);
+	text.append("标题："+item.getText(1)+"\n");
+	text.append("类型："+item.getText(2)+"\n");
+	text.append("时间："+item.getText(3)+"\n");
+	text.append("结果：\n"+message);
+	text.addListener(SWT.FocusIn, new Listener() {  
+		   public void handleEvent(Event e) {          
+		     // 处理得到焦点的事件   
+			   
+			   System.out.println("++");
+		   }  
+		});
 	  //初始化popup位置
 	shell.open();
  }

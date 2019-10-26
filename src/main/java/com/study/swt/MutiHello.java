@@ -172,7 +172,6 @@ public class MutiHello {
 			public void mouseDown(MouseEvent e) {
 				task.setTitle(name.getText());
 				task.setFun("pl");
-				
 				if (!task.isStop()) {
 					task.start();
 				}
@@ -228,12 +227,16 @@ public class MutiHello {
 		
 		imgBut.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("downImg");
-				if (!task.isStop()) {
-					task.setStop(true);
-					task.start();
+				String http = name.getText();
+				if (StringUtil.notEmpty(http)) {
+					task.setTitle(http);
+					task.setFun("downImg");
+					if (!task.isStop()) {
+						task.setStop(true);
+						task.start();
+					}
 				}
+				
 			}
 		});
 		save.addMouseListener(new MouseAdapter() {
@@ -290,11 +293,14 @@ public class MutiHello {
 		
 		videoBut.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("downVideo");
-				if (!task.isStop()) {
-					task.setStop(true);
-					task.start();
+				String http = name.getText();
+				if (StringUtil.notEmpty(http)) {
+					task.setTitle(http);
+					task.setFun("downVideo");
+					if (!task.isStop()) {
+						task.setStop(true);
+						task.start();
+					}
 				}
 			}
 		});
@@ -401,7 +407,7 @@ public class MutiHello {
 			        messageBox.setMessage(item1.getText(4));
 			        messageBox.open();*/
 					//MessageDialog.openInformation(shell,"结果",item1.getText(4));
-					new Alert(result);
+					new Alert(result,item1);
 				}
 			});
 		}

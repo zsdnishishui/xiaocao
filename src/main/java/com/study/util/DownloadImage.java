@@ -7,27 +7,32 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.eclipse.swt.widgets.Text;
 
 public class DownloadImage implements Runnable {
 	private String downUrl;
 	private String url;
 	private ProgressBar bar;
+	private Text text;
 	 /**
 	  * 
 	  * @param downUrl
 	  * @param url fileUrl
 	 * @param bar 
+	 * @param text 
 	  */
-     public DownloadImage(String downUrl,String url, ProgressBar bar){
+     public DownloadImage(String downUrl,String url, ProgressBar bar, Text text){
          this.downUrl = downUrl;
          this.url = url;
          this.bar = bar;
+         this.text = text;
      }
 	public void run() {
 		// 创建httpclient实例
@@ -45,6 +50,7 @@ public class DownloadImage implements Runnable {
         Display.getDefault().asyncExec(new Runnable(){  
             
             public void run() {
+            	text.append(downUrl+" 下载成功\n");
             	if (bar!=null) {
             		bar.setSelection(bar.getSelection() + 1);
 				}
@@ -53,7 +59,14 @@ public class DownloadImage implements Runnable {
         });
         pictureResponse.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Display.getDefault().asyncExec(new Runnable(){  
+                public void run() {  
+                	text.append(downUrl+" 下载失败\n");
+                	if (bar!=null) {
+                		bar.setSelection(bar.getSelection() + 1);
+    				}
+                }
+            });
 			e.printStackTrace();
 		}
 }
