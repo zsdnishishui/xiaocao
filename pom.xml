@@ -43,7 +43,12 @@
 			<artifactId>httpclientutil</artifactId>
 			<version>1.0.4</version>
 		</dependency>
-
+<!-- selenium-java -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.4.0</version>
+        </dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
