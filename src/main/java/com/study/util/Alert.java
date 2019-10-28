@@ -27,14 +27,6 @@ public class Alert {
 	text.append("类型："+item.getText(2)+"\n");
 	text.append("时间："+item.getText(3)+"\n");
 	text.append("结果：\n"+message);
-	text.addListener(SWT.FocusIn, new Listener() {  
-		   public void handleEvent(Event e) {          
-		     // 处理得到焦点的事件   
-			   
-			   System.out.println("++");
-		   }  
-		});
-	  //初始化popup位置
 	shell.open();
  }
  
