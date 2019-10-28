@@ -1,12 +1,18 @@
 package com.study.swt;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -17,6 +23,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.study.util.DownVideo;
 import com.study.util.DownloadImage;
@@ -399,11 +409,11 @@ public class Task extends Thread{
 		        Elements elements1 = doc.select(".tpc_content.do_not_catch a");
 		        Elements topName = doc.select("h4");
 		        String title = topName.get(0).text();
-		        Display.getDefault().asyncExec(new Runnable(){  
+		        /*Display.getDefault().asyncExec(new Runnable(){  
 	                public void run() {  
 	                	text.append(title+"\n");
 	                }
-	            });
+	            });*/
 		        String src = elements1.get(1).attr("onclick");
 		        //getElementById('iframe1').src='http://www.uuge010.com/play/video.php?id=64#iframeload'
 		        String url = src.substring(src.indexOf("=")+2,src.indexOf("#"));
@@ -428,8 +438,27 @@ public class Task extends Thread{
 		        	String html3 =html2.substring(html2.indexOf("video_url: '"));
 			        
 			        String url2 =html3.substring(12, html3.indexOf(",")-1);
-			        String toGetUrl = url2.substring(url2.indexOf("http"));
-			        realUrl = GetHtml.realUrl(httpClient,toGetUrl);
+			        if (url2.startsWith("function")) {
+			        	System.setProperty("webdriver.chrome.driver", "chromedriver.exe");  
+			            //初始化一个chrome浏览器实例，实例名称叫driver  
+			            WebDriver driver = new ChromeDriver();  
+			            //最大化窗口  
+			            driver.manage().window().maximize();  
+			            //设置隐性等待时间  
+			            driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+			            // get()打开一个站点  
+			            driver.get(url);
+			            //getTitle()获取当前页面title的值  
+			            WebElement ele = driver.findElement(By.id("kt_player"));
+			            ele.click();
+			            String mp4Url=driver.findElements(By.tagName("video")).get(0).getAttribute("src");
+			            driver.get(mp4Url);
+			            realUrl=driver.getCurrentUrl();
+			            driver.close();
+			            
+					} else {
+						realUrl=GetHtml.realUrl(httpClient,url2);
+					}
 				}else if (html2.indexOf("video: '")>0) {
 					String html3 =html2.substring(html2.indexOf("video: '")+8);
 					realUrl =html3.substring(0, html3.indexOf("'"));
@@ -441,14 +470,22 @@ public class Task extends Thread{
 		        System.out.println(realUrl);
 		        DownVideo down = new DownVideo();
 		        String dir=title.replace("\\", "").replace("/", "").replace("?", "").replace(":", "").replace("*", "").replace("\"", "").replace("<", "").replace(">", "").replace("|", "");
-		       int res = down.startDown(diaoNaoUrl+dir+"/",realUrl);
+		      String windowUrl = diaoNaoUrl+dir+"/";
+		        int res = down.startDown(windowUrl,realUrl);
+		       Display.getDefault().asyncExec(new Runnable(){  
+	                
+	                public void run() {  
+	                	text.setText(windowUrl+"1024.mp4");
+	                }
+	  
+	            });
 		       if(res!=-1){
 		    	   down.printProgress(bar); 
 		       }else{
 		    	   Display.getDefault().asyncExec(new Runnable(){  
 		                
 		                public void run() {  
-		                	text.append("下载失败");
+		                	text.setText("下载失败");
 		                }
 		  
 		            });

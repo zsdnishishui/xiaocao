@@ -7,8 +7,14 @@ import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.ole.win32.OLE;
+import org.eclipse.swt.ole.win32.OleAutomation;
+import org.eclipse.swt.ole.win32.OleClientSite;
+import org.eclipse.swt.ole.win32.OleFrame;
+import org.eclipse.swt.ole.win32.Variant;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -283,6 +289,8 @@ public class MutiHello {
 		final ProgressBar bar = new ProgressBar(composite, SWT.SMOOTH);
 		bar.setMinimum(0);
 		bar.setMaximum(100);
+		Button play = new Button(composite, SWT.PUSH);
+		play.setText("播放");
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
@@ -329,6 +337,28 @@ public class MutiHello {
 				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
 					FileUtil.writeFile(jieGuo,name.getText(),type);
 					text.append("\n保存成功");
+				}
+			}
+		});
+		play.addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				String jieGuo  = text.getText();
+				if (StringUtil.notEmpty(jieGuo)&&jieGuo.endsWith(".mp4")) {
+					Shell shell = new Shell();
+					shell.setText("Media Player 播放器");
+					shell.setLayout(new FillLayout());
+					OleFrame frame = new OleFrame(shell, SWT.NONE);
+					OleClientSite clientSite = new OleClientSite(frame, SWT.NONE, "WMPlayer.OCX");
+					clientSite.doVerb(OLE.OLEIVERB_INPLACEACTIVATE);
+					OleAutomation player = new OleAutomation(clientSite);
+					int playURL[] = player.getIDsOfNames(new String[] { "URL" });
+					if (playURL != null) {
+						Variant theFile = new Variant(jieGuo);
+						player.setProperty(playURL[0], theFile);
+					}
+					player.dispose();
+					shell.setSize(800, 600);
+					shell.open();
 				}
 			}
 		});
