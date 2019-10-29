@@ -417,14 +417,28 @@ public class MutiHello {
 		
 		reBut.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				Task reTask = new Task(text,bar);
-				reTask.setTitle(name.getText());
-				reTask.setFun("downVideo");
-				caoliuVideoThread.stop=false;
-				if (!reTask.isStop()) {
-					reTask.setStop(true);
-					reTask.start();
+				if (caoliuVideoThread.stop) {
+					if (StringUtil.isEmpty(name.getText())) {
+						MessageBox messageBox = new MessageBox(bar.getShell());
+				        messageBox.setMessage("页面路径不能为空");
+				        messageBox.open();
+					}else{
+						Task reTask = new Task(text,bar);
+						reTask.setTitle(name.getText());
+						reTask.setFun("downVideo");
+						caoliuVideoThread.stop=false;
+						if (!reTask.isStop()) {
+							reTask.setStop(true);
+							reTask.start();
+						}
+					}
+					
+				}else{
+					MessageBox messageBox = new MessageBox(bar.getShell());
+			        messageBox.setMessage("请先停止");
+			        messageBox.open();
 				}
+				
 			}
 		});
 		susBut.addMouseListener(new MouseAdapter() {
