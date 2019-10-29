@@ -463,7 +463,9 @@ public class MutiHello {
 				String type = task.getFun();
 				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
 					FileUtil.writeFile(jieGuo,name.getText(),type);
-					text.append("\n保存成功");
+					MessageBox messageBox = new MessageBox(bar.getShell());
+			        messageBox.setMessage("保存成功");
+			        messageBox.open();
 				}
 			}
 		});
