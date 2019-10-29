@@ -319,22 +319,34 @@ public class MutiHello {
 		save.setText("保存下载记录");
 		//进度条
 		final ProgressBar bar = new ProgressBar(composite, SWT.SMOOTH);
-		bar.setMinimum(0);
-        //bar.setMaximum(100);
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
 		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text,bar);
+		//Task task = new Task(text,bar);
 		// 为按键指定鼠标事件
 		
 		imgBut.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				String http = name.getText();
 				if (StringUtil.notEmpty(http)) {
+					ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+				      int noThreads = currentGroup.activeCount();
+				      Thread[] lstThreads = new Thread[noThreads];
+				      currentGroup.enumerate(lstThreads);
+				      for (int i = 1; i < noThreads; i++){
+				    	  if (lstThreads[i].getName().startsWith("pool")) {
+				    		  return;
+						}
+				    	  
+				      }
+				      bar.setMinimum(0);
+				      bar.setSelection(0);
+					Task task = new Task(text,bar);
 					task.setTitle(http);
 					task.setFun("downImg");
+					task.setName("downImgThread");
 					if (!task.isStop()) {
 						task.setStop(true);
 						task.start();
@@ -346,9 +358,8 @@ public class MutiHello {
 		save.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				String jieGuo  = text.getText();
-				String type = task.getFun();
-				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
-					FileUtil.writeFile(jieGuo,name.getText(),type);
+				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())) {
+					FileUtil.writeFile(jieGuo,name.getText(),"downImg");
 					text.append("\n保存成功");
 				}
 			}
@@ -378,7 +389,7 @@ public class MutiHello {
 		videoBut.setText("下载此页面中的视频");
 		
 		Button susBut= new Button(composite, SWT.PUSH);
-		susBut.setText("暂停下载");
+		susBut.setText("停止下载");
 		Button reBut= new Button(composite, SWT.PUSH);
 		reBut.setText("重新下载");
 		Button save = new Button(composite, SWT.PUSH);

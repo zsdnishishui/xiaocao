@@ -34,7 +34,7 @@ public class DownVideo {
     //public static long reveive=0;//这是全局(全项目)变量，而 long reveive=0；也是全局变量，只是在这个类中是
     private String dirUrl;
     /**
-     * 注意此方法与下载方法完全独立
+     * 注意此方法与下载方法完全独立，但是同时读写一个文件，有时会读不到数据
      * @return
      */
 	public float getDownloadProgress()
