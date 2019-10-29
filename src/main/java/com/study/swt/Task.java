@@ -1,15 +1,10 @@
 package com.study.swt;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -84,7 +80,7 @@ public class Task extends Thread{
 		public void title(){
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
-	    		if(stop){
+	    		if(!stop){
 	    			break;
 	    		}
 	    		
@@ -162,7 +158,7 @@ public class Task extends Thread{
 		public void plnum(){
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
-	    		if(stop){
+				if(!stop){
 	    			break;
 	    		}
 	    		
@@ -240,7 +236,7 @@ public class Task extends Thread{
 		public void people(){
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 			for (int i = 1; i <= 100; i++) {
-	    		if(stop){
+				if(!stop){
 	    			break;
 	    		}
 	    		
@@ -443,7 +439,7 @@ public class Task extends Thread{
 			            //初始化一个chrome浏览器实例，实例名称叫driver  
 			            WebDriver driver = new ChromeDriver();  
 			            //最大化窗口  
-			            driver.manage().window().maximize();  
+			            //driver.manage().window().maximize();
 			            //设置隐性等待时间  
 			            driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
 			            // get()打开一个站点  

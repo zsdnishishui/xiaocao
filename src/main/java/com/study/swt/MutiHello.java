@@ -7,7 +7,6 @@ import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.ole.win32.OLE;
@@ -18,6 +17,7 @@ import org.eclipse.swt.ole.win32.Variant;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
@@ -71,16 +71,22 @@ public class MutiHello {
 		MutiHello mutiTask= new MutiHello();  
   
         mutiTask.getShell().open();  
-  
-        while (!mutiTask.getShell().isDisposed()) {  
-  
-            if (!display.readAndDispatch()) {  
-  
-                display.sleep();  
-  
-            }  
-  
-        }  
+        try {
+        	while (!mutiTask.getShell().isDisposed()) {  
+        		  
+                if (!display.readAndDispatch()) {  
+      
+                    display.sleep();  
+      
+                }  
+      
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("exit");
+			System.exit(0);
+		}
+        
         System.exit(0);
 	}
 
@@ -141,19 +147,42 @@ public class MutiHello {
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
 		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
 		text.setLayoutData(gTextData);
-		Task task = new Task(text,bar);
+		//Task task = new Task(text,bar);
 		// 为按键指定鼠标事件
 		butt.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
 				if (StringUtil.isEmpty(name.getText())) {
 					text.setText("标题不能为空");
 				}else{
-					task.setTitle(name.getText());
-					
-					task.setFun("title");
-					if (!task.isStop()) {
-						task.start();
+					ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+				      int noThreads = currentGroup.activeCount();
+				      Thread[] lstThreads = new Thread[noThreads];
+				      currentGroup.enumerate(lstThreads);
+				      int textThreads=0;
+				      for (int i = 1; i < noThreads; i++){
+				    	  if (lstThreads[i].getName().startsWith("Thread")) {
+				    		  textThreads++;
+						}
+				    	  
+				      }
+				     if (textThreads>0) {
+				    	 MessageBox messageBox = new MessageBox(bar.getShell());
+					        messageBox.setMessage("请先停止");
+					        messageBox.open();
+					}else{
+						Task task = new Task(text,bar);
+						task.setTitle(name.getText());
+						task.setFun("title");
+						if (!task.isStop()) {
+							task.setStop(true);
+							System.out.println(task.getState());
+							if ("NEW".equals(task.getState().toString())) {
+								task.start();
+							}
+						}
 					}
+					
+					
 					
 				}
 				
@@ -161,25 +190,95 @@ public class MutiHello {
 		});
 		stop.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				task.setStop(true);
+				ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+					      int noThreads = currentGroup.activeCount();
+					      Thread[] lstThreads = new Thread[noThreads];
+					      currentGroup.enumerate(lstThreads);
+					      for (int i = 1; i < noThreads; i++){
+					    	  //停止此tab下的线程，其它tab下的不用管
+					    	  if (lstThreads[i].getName().startsWith("Thread")) {
+					    		  Task task=(Task)lstThreads[i];
+						    	  task.setStop(false);
+					    	  }
+					    	  
+					      }
+					      
 			}
 		});
 		search.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("people");
-				
-				if (!task.isStop()) {
-					task.start();
+				if (StringUtil.isEmpty(name.getText())) {
+					text.setText("标题不能为空");
+				}else{
+					ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+				      int noThreads = currentGroup.activeCount();
+				      Thread[] lstThreads = new Thread[noThreads];
+				      currentGroup.enumerate(lstThreads);
+				      int textThreads=0;
+				      for (int i = 1; i < noThreads; i++){
+				    	  if (lstThreads[i].getName().startsWith("Thread")) {
+				    		  textThreads++;
+						}
+				    	  
+				      }
+				     if (textThreads>0) {
+				    	 MessageBox messageBox = new MessageBox(bar.getShell());
+					        messageBox.setMessage("请先停止");
+					        messageBox.open();
+					}else{
+						Task task = new Task(text,bar);
+						task.setTitle(name.getText());
+						task.setFun("people");
+						if (!task.isStop()) {
+							task.setStop(true);
+							System.out.println(task.getState());
+							if ("NEW".equals(task.getState().toString())) {
+								task.start();
+							}
+						}
+					}
+					
+					
+					
 				}
 			}
 		});
+		
 		pl.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				task.setTitle(name.getText());
-				task.setFun("pl");
-				if (!task.isStop()) {
-					task.start();
+				if (StringUtil.isEmpty(name.getText())) {
+					text.setText("标题不能为空");
+				}else{
+					ThreadGroup currentGroup = Thread.currentThread().getThreadGroup();
+				      int noThreads = currentGroup.activeCount();
+				      Thread[] lstThreads = new Thread[noThreads];
+				      currentGroup.enumerate(lstThreads);
+				      int textThreads=0;
+				      for (int i = 1; i < noThreads; i++){
+				    	  if (lstThreads[i].getName().startsWith("Thread")) {
+				    		  textThreads++;
+						}
+				    	  
+				      }
+				     if (textThreads>0) {
+				    	 MessageBox messageBox = new MessageBox(bar.getShell());
+					        messageBox.setMessage("请先停止");
+					        messageBox.open();
+					}else{
+						Task task = new Task(text,bar);
+						task.setTitle(name.getText());
+						task.setFun("pl");
+						if (!task.isStop()) {
+							task.setStop(true);
+							System.out.println(task.getState());
+							if ("NEW".equals(task.getState().toString())) {
+								task.start();
+							}
+						}
+					}
+					
+					
+					
 				}
 			}
 		});
@@ -187,9 +286,8 @@ public class MutiHello {
 			public void mouseDown(MouseEvent e) {
 				//注意这一步替换，不然无法解析json
 				String jieGuo  = text.getText().replace("\"", "\\\"");
-				String type = task.getFun();
-				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())&&StringUtil.notEmpty(type)) {
-					FileUtil.writeFile(jieGuo,name.getText(),type);
+				if (StringUtil.notEmpty(jieGuo)&&StringUtil.notEmpty(name.getText())) {
+					FileUtil.writeFile(jieGuo,name.getText(),"查询文本");
 					text.append("\n保存成功");
 				}
 			}
@@ -292,11 +390,15 @@ public class MutiHello {
 		Button play = new Button(composite, SWT.PUSH);
 		play.setText("播放");
 		// 创建多行Text组件，包含边框，自动换行，包括垂直滚动条
-		Text text = new Text(panel, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		Text text = new Text(panel, SWT.BORDER|SWT.FILL);
 		// 为文本框指定一个布局结构对象，这里让文本框尽可能的占满Panel的空间。
-		GridData gTextData = new GridData(GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL | GridData.FILL_BOTH);
+		GridData gTextData = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(gTextData);
 		Task task = new Task(text,bar);
+		OleFrame frame = new OleFrame(panel, SWT.NONE);
+		frame.setLayoutData(gPanelData);
+		OleClientSite clientSite = new OleClientSite(frame, SWT.NONE, "WMPlayer.OCX");
+		clientSite.doVerb(OLE.OLEIVERB_INPLACEACTIVATE);
 		// 为按键指定鼠标事件
 		
 		videoBut.addMouseListener(new MouseAdapter() {
@@ -344,21 +446,14 @@ public class MutiHello {
 			public void mouseDown(MouseEvent e) {
 				String jieGuo  = text.getText();
 				if (StringUtil.notEmpty(jieGuo)&&jieGuo.endsWith(".mp4")) {
-					Shell shell = new Shell();
-					shell.setText("Media Player 播放器");
-					shell.setLayout(new FillLayout());
-					OleFrame frame = new OleFrame(shell, SWT.NONE);
-					OleClientSite clientSite = new OleClientSite(frame, SWT.NONE, "WMPlayer.OCX");
-					clientSite.doVerb(OLE.OLEIVERB_INPLACEACTIVATE);
 					OleAutomation player = new OleAutomation(clientSite);
-					int playURL[] = player.getIDsOfNames(new String[] { "URL" });
-					if (playURL != null) {
-						Variant theFile = new Variant(jieGuo);
-						player.setProperty(playURL[0], theFile);
-					}
-					player.dispose();
-					shell.setSize(800, 600);
-					shell.open();
+ 					int playURL[] = player.getIDsOfNames(new String[] { "URL" });
+ 					if (playURL != null) {
+ 						Variant theFile = new Variant(jieGuo);
+ 						player.setProperty(playURL[0], theFile);
+ 					}
+ 					player.dispose();
+					
 				}
 			}
 		});
