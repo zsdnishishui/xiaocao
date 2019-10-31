@@ -479,6 +479,11 @@ public class MutiHello {
  						Variant theFile = new Variant(jieGuo);
  						player.setProperty(playURL[0], theFile);
  					}
+ 					int ids[] = player.getIDsOfNames(new String[] { "play" });  
+ 			        if (ids != null)  
+ 			        {  
+ 			        	player.invoke(ids[0]);  
+ 			        }
  					player.dispose();
 					
 				}
