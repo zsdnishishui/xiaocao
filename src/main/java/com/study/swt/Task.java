@@ -26,6 +26,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import com.study.util.DownVideo;
 import com.study.util.DownloadImage;
+import com.study.util.FileUtil;
 import com.study.util.StringUtil;
 import com.study.xiaocao.GetHtml;
 
@@ -84,7 +85,7 @@ public class Task extends Thread{
 	    			break;
 	    		}
 	    		
-				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
+				String html = GetHtml.getHtmlForEach(httpClient,StringUtil.url+"?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -162,7 +163,7 @@ public class Task extends Thread{
 	    			break;
 	    		}
 	    		
-				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
+				String html = GetHtml.getHtmlForEach(httpClient,StringUtil.url+"?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -240,7 +241,7 @@ public class Task extends Thread{
 	    			break;
 	    		}
 	    		
-				String html = GetHtml.getHtmlForEach(httpClient,"https://cl.w8li.com/thread0806.php?fid=7&page=" + i,true);
+				String html = GetHtml.getHtmlForEach(httpClient,StringUtil.url+"?fid=7&page=" + i,true);
 				if ("".equals(html)) {
 					i--;
 				}else if ("<html><head><meta http-equiv='refresh' content='2;url=codeform.php'></head>".equals(html)){
@@ -460,8 +461,14 @@ public class Task extends Thread{
 					realUrl =html3.substring(0, html3.indexOf("'"));
 				}else{
 					doc = Jsoup.parse(html2);
-					String videoSrc = doc.select("iframe").get(0).attr("src");
-					realUrl = videoSrc.split("=")[1];
+					
+					if (doc.select("source").get(0)!=null) {
+						realUrl = doc.select("source").get(0).attr("src");
+					}else{
+						String videoSrc = doc.select("iframe").get(0).attr("src");
+						realUrl = videoSrc.split("=")[1];
+					}
+					
 				}
 		        System.out.println(realUrl);
 		        DownVideo down = new DownVideo();
