@@ -4,7 +4,9 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class StringUtil {
-	public static String url = "https://cc.jb6v.icu/thread0806.php";
+	public static String host = "https://cc.jb6v.icu/";
+	public static String url = host+"thread0806.php";
+	
 	/**
 	 * 检测字符串是否不为空(null,"","null")
 	 * @param s

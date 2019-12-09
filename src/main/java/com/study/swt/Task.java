@@ -129,7 +129,7 @@ public class Task extends Thread{
 										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 										time=time.replace("今天", simpleDateFormat.format(today));
 									}
-				                	text.append(time+"："+ele.text() + "：页面链接：https://cl.w8li.com/" + parent.select("h3 a").attr("href")+"\n");
+				                	text.append(time+"："+ele.text() + "：页面链接："+StringUtil.host + parent.select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
@@ -206,7 +206,7 @@ public class Task extends Thread{
 										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 										time=time.replace("今天", simpleDateFormat.format(today));
 									}
-				                	text.append(time+"："+ele.parent().select(".tal").select("h3").text()+ "：页面链接：https://cl.w8li.com/" + ele.parent().select("h3 a").attr("href")+"\n");
+				                	text.append(time+"："+ele.parent().select(".tal").select("h3").text()+ "：页面链接："+StringUtil.host + ele.parent().select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
@@ -288,7 +288,7 @@ public class Task extends Thread{
 										SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 										time=time.replace("今天", simpleDateFormat.format(today));
 									}
-				                	text.append(time+"："+tr.select(".tal").select("h3").text() + "：页面链接：https://cl.w8li.com/" + tr.select("h3 a").attr("href")+"\n");
+				                	text.append(time+"："+tr.select(".tal").select("h3").text() + "：页面链接："+StringUtil.host + tr.select("h3 a").attr("href")+"\n");
 				                }
 				  
 				            });
