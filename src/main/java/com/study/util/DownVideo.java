@@ -18,7 +18,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLContextBuilder;
@@ -66,6 +68,7 @@ public class DownVideo {
 	}
 	public int startDown(String dirUrl, String realUrl){
 		this.dirUrl=dirUrl;
+		HttpHost proxy = new HttpHost("0.0.0.0", 8580, "http");
 		try {
 			//实现https免证书认证
 			CloseableHttpClient httpclient = HttpClients.custom()
@@ -78,6 +81,13 @@ public class DownVideo {
 			                }
 			            }).build()).build();
 	        HttpGet httpget = new HttpGet(realUrl);
+			// 配置信息
+			RequestConfig requestConfig = RequestConfig.custom()
+					.setProxy(proxy)
+					.build();
+
+			// 将上面的配置信息 运用到这个Get请求里
+			httpget.setConfig(requestConfig);
 	        HttpResponse response = httpclient.execute(httpget);
 	        HttpEntity responseEntity = response.getEntity();
 	        length = responseEntity.getContentLength();

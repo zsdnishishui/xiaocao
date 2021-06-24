@@ -44,14 +44,14 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 		httpGet.setHeader("Accept-Language", "zh-CN,zh;q=0.8");
 		httpGet.setHeader("User-Agent", headers[reand]);
 		//httpGet.setHeader("x-forwarded-for","125.77.49.244");
-		//HttpHost proxy = new HttpHost("119.57.108.109", 53281, "http");
+		HttpHost proxy = new HttpHost("0.0.0.0", 8580, "http");
 		
 		// 响应模型
 		CloseableHttpResponse response = null;
 		try {
 			// 配置信息
 			RequestConfig requestConfig = RequestConfig.custom()
-					//.setProxy(proxy)
+					.setProxy(proxy)
 					// 设置连接超时时间(单位毫秒)
 					.setConnectTimeout(5000)
 					// 设置请求超时时间(单位毫秒)
@@ -60,7 +60,7 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
 					.setSocketTimeout(5000)
 					// 设置是否允许重定向(默认为true)
 					.build();
- 
+
 			// 将上面的配置信息 运用到这个Get请求里
 			httpGet.setConfig(requestConfig);
 			if (flag) {
@@ -158,13 +158,13 @@ private static String[] headers={"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; r
         String html = "";
 		// 创建Get请求
 		HttpGet httpGet = new HttpGet(url);
-		
+		HttpHost proxy = new HttpHost("0.0.0.0", 8580, "http");
 		// 响应模型
 		CloseableHttpResponse response = null;
 		try {
 			// 配置信息
 			RequestConfig requestConfig = RequestConfig.custom()
-					//.setProxy(proxy)
+					.setProxy(proxy)
 					// 设置连接超时时间(单位毫秒)
 					.setConnectTimeout(5000)
 					// 设置请求超时时间(单位毫秒)

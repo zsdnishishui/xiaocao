@@ -7,6 +7,7 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -37,8 +38,16 @@ public class DownloadImage implements Runnable {
 	public void run() {
 		// 创建httpclient实例
     	CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+		HttpHost proxy = new HttpHost("0.0.0.0", 8580, "http");
 		try {
+			RequestConfig requestConfig = RequestConfig.custom()
+					.setProxy(proxy)
+					.build();
+
+			// 将上面的配置信息 运用到这个Get请求里
+			downUrl = downUrl.replace("x/?i=i","i");
 			HttpGet PicturehttpGet = new HttpGet(downUrl);
+			PicturehttpGet.setConfig(requestConfig);
         CloseableHttpResponse pictureResponse = httpclient.execute(PicturehttpGet);
         HttpEntity pictureEntity = pictureResponse.getEntity();
         InputStream inputStream = pictureEntity.getContent();
@@ -46,6 +55,7 @@ public class DownloadImage implements Runnable {
         if (!url.contains(".")) {
 			url+=".jpg";
 		}
+
         FileUtils.copyToFile(inputStream, new File(url));
         Display.getDefault().asyncExec(new Runnable(){  
             

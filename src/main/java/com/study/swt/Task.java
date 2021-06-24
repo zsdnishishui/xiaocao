@@ -342,7 +342,7 @@ public class Task extends Thread{
 	                }
 	            });
 		        for(Element ele:elements1){
-		        	String url = ele.attr("data-src");
+		        	String url = ele.attr("data-link");
 		        	if (!"".equals(url)) {
 						listImgUrl.add(url);
 					}
@@ -458,6 +458,9 @@ public class Task extends Thread{
 					}
 				}else if (html2.indexOf("video: '")>0) {
 					String html3 =html2.substring(html2.indexOf("video: '")+8);
+					realUrl =html3.substring(0, html3.indexOf("'"));
+				}else if(html2.indexOf("url: '")>0){
+					String html3 =html2.substring(html2.indexOf("url: '")+6);
 					realUrl =html3.substring(0, html3.indexOf("'"));
 				}else{
 					doc = Jsoup.parse(html2);

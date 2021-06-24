@@ -4,7 +4,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class StringUtil {
-	public static String host = "https://cc.jb6v.icu/";
+	public static String host = "http://t66y.com/";
 	public static String url = host+"thread0806.php";
 	
 	/**
