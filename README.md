@@ -6,3 +6,5 @@
 ![image](https://github.com/zsdnishishui/uploadImg/blob/master/downImg.png)
 ![image](https://github.com/zsdnishishui/uploadImg/blob/master/downVideo.png)
 ![image](https://github.com/zsdnishishui/uploadImg/blob/master/record.png)
+
+## 用java写爬虫真是太辛苦了，准备不维护此项目，有时间用python重构一套
