@@ -8,3 +8,4 @@
 ![image](https://github.com/zsdnishishui/uploadImg/blob/master/record.png)
 
 ## 用java写爬虫真是太辛苦了，准备不维护此项目，有时间用python重构一套 -20240610
+目前已经支持所有页面的图片下载
