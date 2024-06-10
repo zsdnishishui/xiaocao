@@ -83,7 +83,7 @@ public class DownloadImage implements Runnable {
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
-                    text.append(downUrl + "\n");
+                    text.append(downUrl + " 下载成功\n");
                     if (bar != null) {
                         bar.setSelection(bar.getSelection() + 1);
                     }
@@ -94,7 +94,7 @@ public class DownloadImage implements Runnable {
         } catch (IOException e) {
             Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
-                    text.append(downUrl + "\n");
+                    text.append(downUrl + " 下载失败\n");
                     if (bar != null) {
                         bar.setSelection(bar.getSelection() + 1);
                     }
